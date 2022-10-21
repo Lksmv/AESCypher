@@ -26,6 +26,13 @@ public class AES {
     public int[] pegarPrimeiraPalavra(List<Integer> key){
         return new int[]{key.get(0),key.get(4),key.get(8),key.get(12)};
     }
+    public int[] pegarSegundaPalavra(List<Integer> key){
+        return new int[]{key.get(1),key.get(5),key.get(9),key.get(13)};
+    }
+    public int[] pegarTerceiraPalavra(List<Integer> key){
+        return new int[]{key.get(2),key.get(6),key.get(10),key.get(14)};
+    }
+
     public int[] rotacionarPalavra(int[] word){
         return new int[]{word[1],word[2],word[3],word[0]};
     }
