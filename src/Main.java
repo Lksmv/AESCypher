@@ -1,18 +1,37 @@
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Informe a key(Hexadecimal e separado por virgula!: ");
+        String key = scanner.nextLine().trim().replace(" ","").replace(","," ");
+        //String key = "41,45,49,4d,42,46,4a,4e,43,47,4b,4f,44,48,4c,50".trim().replace(" ","").replace(","," ");
+        System.out.println("Informe o diretorio do arquivo que você quer criptografar:");
+        String diretorio  = scanner.nextLine().trim();
+        System.out.println("Nome do arquivo destino?:");
+        String nome = scanner.nextLine().trim();
 
-        String key = "0x41 0x45 0x49 0x4d 0x42 0x46 0x4a 0x4e 0x43 0x47 0x4b 0x4f 0x44 0x48 0x4c 0x50";
-        String[] texto = "0x44 0x4e 0x56 0x4e 0x45 0x56 0x49 0x54 0x53 0x4f 0x4d 0x4f 0x45 0x4c 0x45 0x21".replace("0x","").split(" ");
-        key = key.replace("0x","");
+
+        byte[] data = Files.readAllBytes(Paths.get(diretorio));
+        String[] vet = new String[data.length];
+        for(int i=0;i<data.length;i++){
+            vet[i] = Integer.toHexString(Integer.parseInt(String.valueOf(data[i])));
+        }
+
         String[] keyVet = key.split(" ");
         List<Integer> chave = new ArrayList<>();
         int[] textoSimples = new int[16];
         for(int i=0;i<16;i++){
-            textoSimples[i] = Integer.parseInt(texto[i],16);
+            textoSimples[i] = Integer.parseInt(vet[i],16);
         }
         Arrays.stream(keyVet).forEach(values -> {
             chave.add(Integer.parseInt(values,16));
@@ -47,7 +66,14 @@ public class Main {
         System.out.println(Integer.toHexString(cifra[4])+" "+Integer.toHexString(cifra[5])+" "+Integer.toHexString(cifra[6])+" "+Integer.toHexString(cifra[7]));
         System.out.println(Integer.toHexString(cifra[8])+" "+Integer.toHexString(cifra[9])+" "+Integer.toHexString(cifra[10])+" "+Integer.toHexString(cifra[11]));
         System.out.println(Integer.toHexString(cifra[12])+" "+Integer.toHexString(cifra[13])+" "+Integer.toHexString(cifra[14])+" "+Integer.toHexString(cifra[15]));
+        try ( OutputStreamWriter outputWriter = new OutputStreamWriter(new FileOutputStream(nome+".txt"), StandardCharsets.UTF_8)) {
+            outputWriter.write(Integer.toHexString(cifra[0])+" "+Integer.toHexString(cifra[1])+" "+Integer.toHexString(cifra[2])+" "+Integer.toHexString(cifra[3])+"\r\n"+
+                    Integer.toHexString(cifra[4])+" "+Integer.toHexString(cifra[5])+" "+Integer.toHexString(cifra[6])+" "+Integer.toHexString(cifra[7])+"\r\n"+
+                            Integer.toHexString(cifra[8])+" "+Integer.toHexString(cifra[9])+" "+Integer.toHexString(cifra[10])+" "+Integer.toHexString(cifra[11])+"\r\n"+
+                                    Integer.toHexString(cifra[12])+" "+Integer.toHexString(cifra[13])+" "+Integer.toHexString(cifra[14])+" "+Integer.toHexString(cifra[15])+"\r\n");
+        }catch (Exception e){
 
+        }
 
     }
 }
